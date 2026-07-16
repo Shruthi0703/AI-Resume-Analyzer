@@ -1,0 +1,43 @@
+package com.airesume.resumeanalyzer.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.airesume.resumeanalyzer.model.Resume;
+import com.airesume.resumeanalyzer.service.ResumeService;
+
+@RestController
+@RequestMapping("/api/resume")
+@CrossOrigin("*")
+public class ResumeController {
+
+    @Autowired
+    private ResumeService resumeService;
+
+    // Upload Resume
+    @PostMapping("/upload")
+    public Resume uploadResume(@RequestParam("file") MultipartFile file) throws IOException {
+
+        return resumeService.uploadResume(file);
+    }
+
+    // Get All Resumes
+    @GetMapping("/all")
+    public List<Resume> getAllResumes() {
+
+        return resumeService.getAllResumes();
+    }
+
+    // Delete Resume
+    @DeleteMapping("/{id}")
+    public String deleteResume(@PathVariable Long id) {
+
+        resumeService.deleteResume(id);
+
+        return "Resume deleted successfully.";
+    }
+}

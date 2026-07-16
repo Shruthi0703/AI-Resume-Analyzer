@@ -1,0 +1,5 @@
+package com.airesume.resumeanalyzer.repository;
+
+public interface ResumeAnalysisRepository {
+
+}

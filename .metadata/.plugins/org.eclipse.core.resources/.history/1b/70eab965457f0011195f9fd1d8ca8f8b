@@ -1,0 +1,6 @@
+package com.airesume.resumeanalyzer.util;
+
+public class JwtUtil {
+	private final String SECRET_KEY =
+			"your_super_secret_key_which_is_at_least_32_characters_long";
+}

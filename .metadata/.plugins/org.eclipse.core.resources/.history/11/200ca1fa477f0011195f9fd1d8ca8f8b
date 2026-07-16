@@ -1,0 +1,5 @@
+package com.airesume.resumeanalyzer.service;
+
+public class CustomUserDetailsService {
+
+}

@@ -1,0 +1,19 @@
+package com.airesume.resumeanalyzer.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.airesume.resumeanalyzer.model.User;
+import com.airesume.resumeanalyzer.repository.UserRepository;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    // Register User
+    public User registerUser(User user) {
+        return userRepository.save(user);
+    }
+}

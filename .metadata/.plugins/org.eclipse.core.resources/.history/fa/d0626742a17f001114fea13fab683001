@@ -1,0 +1,54 @@
+package com.airesume.resumeanalyzer.ai;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.google.genai.Client;
+import com.google.genai.types.GenerateContentResponse;
+
+@Service
+public class GeminiService {
+
+    @Autowired
+    private GeminiConfig geminiConfig;
+
+    public String generateSuggestions(String resumeText, String jobDescription) {
+
+        try {
+
+            Client client = Client.builder()
+                    .apiKey(geminiConfig.getApiKey())
+                    .build();
+
+            String prompt = """
+                    You are an AI Resume Analyzer.
+
+                    Resume:
+                    %s
+
+                    Job Description:
+                    %s
+
+                    Analyze the resume and provide:
+
+                    1. Resume Score (out of 100)
+                    2. Strengths
+                    3. Missing Skills
+                    4. Resume Improvement Suggestions
+                    5. Learning Roadmap
+                    """
+                    .formatted(resumeText, jobDescription);
+
+            GenerateContentResponse response =
+                    client.models.generateContent(
+                            "gemini-2.5-flash",
+                            prompt,
+                            null);
+
+            return response.text();
+
+        } catch (Exception e) {
+            return "Gemini Error : " + e.getMessage();
+        }
+    }
+}

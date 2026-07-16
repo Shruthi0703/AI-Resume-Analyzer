@@ -1,0 +1,93 @@
+package com.airesume.resumeanalyzer.controller;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.airesume.resumeanalyzer.model.ResumeAnalysis;
+import com.airesume.resumeanalyzer.repository.ResumeAnalysisRepository;
+import com.airesume.resumeanalyzer.service.AnalysisService;
+import com.airesume.resumeanalyzer.service.PdfService;
+import com.airesume.resumeanalyzer.ai.GeminiService;
+
+@RestController
+@RequestMapping("/api/resume")
+@CrossOrigin("*")
+public class ResumeController {
+
+    @Autowired
+    private PdfService pdfService;
+
+    @Autowired
+    private AnalysisService analysisService;
+     
+    @Autowired
+    private GeminiService geminiService;
+    @Autowired
+    private ResumeAnalysisRepository resumeAnalysisRepository;
+
+    // ===========================
+    // Upload Resume API
+    // ===========================
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadResume(
+
+            @RequestParam("resume") MultipartFile resume,
+            @RequestParam("jobDescription") String jobDescription,
+            @RequestParam("userEmail") String userEmail
+
+    ) throws IOException {
+
+        // Extract Resume Text
+        String resumeText = pdfService.extractText(resume);
+
+        // Find Missing Skills
+        List<String> missingSkills =
+                analysisService.findMissingSkills(resumeText, jobDescription);
+
+        // Calculate Resume Score
+        int score = analysisService.calculateScore(missingSkills);
+
+        // Save to Database
+        ResumeAnalysis analysis = new ResumeAnalysis();
+
+        analysis.setUserEmail(userEmail);
+        analysis.setResumeName(resume.getOriginalFilename());
+        analysis.setResumeScore(score);
+        analysis.setMissingSkills(String.join(", ", missingSkills));
+        analysis.setUploadDate(LocalDateTime.now());
+
+        resumeAnalysisRepository.save(analysis);
+
+        // Response
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("resumeScore", score);
+        response.put("missingSkills", missingSkills);
+        response.put("resumeText", resumeText);
+        response.put("message", "Resume uploaded and analysis saved successfully.");
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ===========================
+    // Resume History API
+    // ===========================
+    @GetMapping("/history")
+    public ResponseEntity<List<ResumeAnalysis>> getResumeHistory(
+            @RequestParam("userEmail") String userEmail) {
+
+        List<ResumeAnalysis> history =
+                resumeAnalysisRepository.findByUserEmail(userEmail);
+
+        return ResponseEntity.ok(history);
+    }
+
+}

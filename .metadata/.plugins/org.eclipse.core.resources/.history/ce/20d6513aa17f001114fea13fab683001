@@ -1,0 +1,71 @@
+package com.airesume.resumeanalyzer.ai;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+@Service
+public class GeminiService {
+
+    @Autowired
+    private GeminiConfig geminiConfig;
+
+    public String generateSuggestions(String resumeText, String jobDescription) {
+
+        String url =
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="
+                        + geminiConfig.getApiKey();
+
+        String prompt =
+                "You are an AI Resume Analyzer.\n\n"
+                + "Resume:\n"
+                + resumeText
+                + "\n\nJob Description:\n"
+                + jobDescription
+                + "\n\nGive:\n"
+                + "1. Resume strengths\n"
+                + "2. Missing skills\n"
+                + "3. Resume improvement suggestions\n"
+                + "4. Learning roadmap\n"
+                + "5. Resume score out of 100.";
+
+        String body = """
+        {
+          "contents": [
+            {
+              "parts": [
+                {
+                  "text": "%s"
+                }
+              ]
+            }
+          ]
+        }
+        """.formatted(prompt.replace("\"", "\\\""));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request =
+                new HttpEntity<>(body, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+
+            ResponseEntity<String> response =
+                    restTemplate.exchange(
+                            url,
+                            HttpMethod.POST,
+                            request,
+                            String.class);
+
+            return response.getBody();
+
+        } catch (Exception e) {
+
+            return "Gemini API Error : " + e.getMessage();
+        }
+    }
+}

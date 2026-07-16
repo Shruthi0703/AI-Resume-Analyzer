@@ -1,0 +1,28 @@
+package com.airesume.resumeanalyzer.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.airesume.resumeanalyzer.dto.LoginRequest;
+import com.airesume.resumeanalyzer.dto.LoginResponse;
+import com.airesume.resumeanalyzer.model.User;
+import com.airesume.resumeanalyzer.service.UserService;
+
+@RestController
+@RequestMapping("/api/users")
+@CrossOrigin("*")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/register")
+    public User registerUser(@RequestBody User user) {
+        return userService.registerUser(user);
+    }
+
+    @PostMapping("/login")
+    public LoginResponse loginUser(@RequestBody LoginRequest request) {
+        return userService.loginUser(request);
+    }
+}

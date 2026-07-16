@@ -1,0 +1,5 @@
+package com.airesume.resumeanalyzer.config;
+
+public class SecurityConfig {
+
+}

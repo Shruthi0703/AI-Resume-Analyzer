@@ -1,0 +1,5 @@
+package com.airesume.resumeanalyzer.model;
+
+public class ResumeAnalysis {
+
+}

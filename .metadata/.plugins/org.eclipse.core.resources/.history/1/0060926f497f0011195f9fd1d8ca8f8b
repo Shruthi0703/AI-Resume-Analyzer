@@ -1,0 +1,61 @@
+package com.airesume.resumeanalyzer.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.airesume.resumeanalyzer.dto.LoginRequest;
+import com.airesume.resumeanalyzer.dto.LoginResponse;
+import com.airesume.resumeanalyzer.model.User;
+import com.airesume.resumeanalyzer.repository.UserRepository;
+import com.airesume.resumeanalyzer.util.JwtUtil;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    // Register User
+    public User registerUser(User user) {
+
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists!");
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        return userRepository.save(user);
+    }
+
+    // Login User
+    public LoginResponse loginUser(LoginRequest request) {
+
+        Optional<User> optionalUser =
+                userRepository.findByEmail(request.getEmail());
+
+        if (optionalUser.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+
+        User user = optionalUser.get();
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid Password");
+        }
+
+        // Generate JWT Token
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return new LoginResponse(token);
+    }
+
+}

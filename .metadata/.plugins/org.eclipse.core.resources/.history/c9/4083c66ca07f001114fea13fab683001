@@ -1,0 +1,14 @@
+spring.application.name=ResumeAnalyzer
+
+# MySQL Configuration
+spring.datasource.url=jdbc:mysql://localhost:3306/resume_db
+spring.datasource.username=root
+spring.datasource.password=root
+
+# JPA Configuration
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# Server Port
+server.port=8080
+gemini.api.key=AQ.Ab8RN6L4hHCRZ2AqULwJM8fnSnk1-TyiEtRv4wPyCWgi_mB8sA

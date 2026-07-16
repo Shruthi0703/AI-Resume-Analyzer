@@ -1,0 +1,17 @@
+package com.airesume.resumeanalyzer.ai;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class GeminiService {
+
+    @Autowired
+    private GeminiConfig geminiConfig;
+
+    public String generateSuggestions(String resumeText,
+                                      String jobDescription) {
+
+        return "Gemini Integration Coming Next";
+    }
+}

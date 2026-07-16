@@ -1,0 +1,5 @@
+package com.airesume.resumeanalyzer.util;
+
+public class JwtUtil {
+
+}
