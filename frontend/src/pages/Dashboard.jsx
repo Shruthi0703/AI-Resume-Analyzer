@@ -18,7 +18,7 @@ const Dashboard = () => {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8080/api/resume/history', {
+      const response = await axios.get('/api/resume/history', {
         params: { userEmail: user.email },
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -46,7 +46,7 @@ const Dashboard = () => {
   const handleDownload = async (id, filename) => {
     try {
       addToast('Generating PDF Report...', 'info');
-      const response = await axios.get(`http://localhost:8080/api/resume/download/${id}`, {
+      const response = await axios.get(`/api/resume/download/${id}`, {
         responseType: 'blob',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

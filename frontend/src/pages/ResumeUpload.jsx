@@ -98,7 +98,7 @@ const ResumeUpload = () => {
     formData.append('userEmail', user.email);
 
     try {
-      const response = await axios.post('http://localhost:8080/api/resume/upload', formData, {
+      const response = await axios.post('/api/resume/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${localStorage.getItem('token')}`

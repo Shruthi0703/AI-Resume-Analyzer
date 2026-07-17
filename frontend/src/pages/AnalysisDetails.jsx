@@ -14,7 +14,7 @@ const AnalysisDetails = () => {
   const fetchDetails = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:8080/api/resume/details/${id}`, {
+      const response = await axios.get(`/api/resume/details/${id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -38,7 +38,7 @@ const AnalysisDetails = () => {
     if (!analysis) return;
     try {
       addToast('Generating PDF Report...', 'info');
-      const response = await axios.get(`http://localhost:8080/api/resume/download/${id}`, {
+      const response = await axios.get(`/api/resume/download/${id}`, {
         responseType: 'blob',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
