@@ -56,7 +56,7 @@ public class PdfReportGenerator {
                 contentStream.newLineAtOffset(margin, currentY);
                 contentStream.showText("User Email: ");
                 contentStream.setFont(fontRegular, 11);
-                contentStream.showText(analysis.getUserEmail());
+                contentStream.showText(sanitizeText(analysis.getUserEmail()));
                 contentStream.endText();
 
                 contentStream.setFont(fontBold, 11);
@@ -76,7 +76,7 @@ public class PdfReportGenerator {
                 contentStream.newLineAtOffset(margin, currentY);
                 contentStream.showText("Resume Name: ");
                 contentStream.setFont(fontRegular, 11);
-                contentStream.showText(analysis.getResumeName());
+                contentStream.showText(sanitizeText(analysis.getResumeName()));
                 contentStream.endText();
 
                 currentY -= 30;
@@ -180,7 +180,27 @@ public class PdfReportGenerator {
         return y - (linesWritten * leading) - 25;
     }
 
+    private static String sanitizeText(String text) {
+        if (text == null) return "";
+        text = text.replace("“", "\"")
+                   .replace("”", "\"")
+                   .replace("‘", "'")
+                   .replace("’", "'")
+                   .replace("•", "-")
+                   .replace("–", "-")
+                   .replace("—", "-");
+        
+        StringBuilder sb = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            if ((c >= 32 && c <= 126) || c == '\n' || c == '\r' || c == '\t') {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
     private static List<String> wrapText(String text, float width, PDType1Font font, int fontSize) throws IOException {
+        text = sanitizeText(text);
         List<String> result = new ArrayList<>();
         if (text == null || text.isEmpty()) return result;
 
