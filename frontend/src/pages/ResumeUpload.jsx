@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { Upload, FileText, AlertTriangle, ChevronRight, Check, Cpu, RefreshCw, BarChart2 } from 'lucide-react';
@@ -98,7 +98,7 @@ const ResumeUpload = () => {
     formData.append('userEmail', user.email);
 
     try {
-      const response = await axios.post('/api/resume/upload', formData, {
+      const response = await API.post('/api/resume/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${localStorage.getItem('token')}`

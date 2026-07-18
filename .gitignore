@@ -1,0 +1,7 @@
+.metadata/
+.settings/
+.project
+.classpath
+.factorypath
+.dist/
+*.log

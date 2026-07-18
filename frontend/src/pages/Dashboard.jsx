@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import API from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { Upload, FileText, Download, Eye, Calendar, Award, Database, TrendingUp, BarChart2, PieChart } from 'lucide-react';
@@ -18,7 +18,7 @@ const Dashboard = () => {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/resume/history', {
+      const response = await API.get('/api/resume/history', {
         params: { userEmail: user.email },
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -46,7 +46,7 @@ const Dashboard = () => {
   const handleDownload = async (id, filename) => {
     try {
       addToast('Generating PDF Report...', 'info');
-      const response = await axios.get(`/api/resume/download/${id}`, {
+      const response = await API.get(`/api/resume/download/${id}`, {
         responseType: 'blob',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

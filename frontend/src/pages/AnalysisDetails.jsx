@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import API from '../api';
 import { useToast } from '../context/ToastContext';
 import { ChevronLeft, Download, CheckCircle, AlertCircle, ListChecks, BookOpen, HelpCircle, Briefcase, Award, Cpu } from 'lucide-react';
 import ScoreGauge from '../components/ScoreGauge';
@@ -14,7 +14,7 @@ const AnalysisDetails = () => {
   const fetchDetails = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/resume/details/${id}`, {
+      const response = await API.get(`/api/resume/details/${id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -38,7 +38,7 @@ const AnalysisDetails = () => {
     if (!analysis) return;
     try {
       addToast('Generating PDF Report...', 'info');
-      const response = await axios.get(`/api/resume/download/${id}`, {
+      const response = await API.get(`/api/resume/download/${id}`, {
         responseType: 'blob',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

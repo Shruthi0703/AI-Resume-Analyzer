@@ -70,7 +70,7 @@ public class SecurityConfig {
         if (allowedOrigins != null && !allowedOrigins.trim().isEmpty()) {
             configuration.setAllowedOrigins(List.of(allowedOrigins.split(",")));
         } else {
-            configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+            configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://ai-resume-analyzer-chi-silk.vercel.app"));
         }
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
